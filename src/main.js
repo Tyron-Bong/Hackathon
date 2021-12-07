@@ -7,10 +7,14 @@ const canvas = canvasElement.getContext("2d");
 const qrResult = document.getElementById("qr-result");
 const outputData = document.getElementById("outputData");
 const btnScanQR = document.getElementById("btn-scan-qr");
+const temp = document.getElementById("temp");
+const qr = document.getElementById("qr");
+const granted = document.getElementById("granted");
+const denied = document.getElementById("denied");
 
 let scanning = false;
 
-qrCode.callback = res => {
+qrCode.callback = async (res) => {
   if (res) {
     outputData.innerText = res;
     scanning = false;
@@ -19,16 +23,30 @@ qrCode.callback = res => {
       track.stop();
     });
 
-    qrResult.hidden = false;
+    qrResult.hidden = true;
     canvasElement.hidden = true;
-    btnScanQR.hidden = false;
+    btnScanQR.hidden = true;
+    if (outputData.innerText != undefined) {
+      temp.hidden = false;
+      qr.hidden = true;
+      var qrData = res;
+    }
+    await waitforme(3000);
+    temp.hidden = true;
+    if (qrData == "true"){
+      granted.hidden = false;
+    }else {
+      denied.hidden = false;
+    }
+    
   }
 };
 
 btnScanQR.onclick = () => {
+  qr.hidden = false
   navigator.mediaDevices
-    .getUserMedia({ video: { facingMode: "environment" } })
-    .then(function(stream) {
+    .getUserMedia({ video: { facingMode: "user" } })
+    .then(function (stream) {
       scanning = true;
       qrResult.hidden = true;
       btnScanQR.hidden = true;
@@ -55,4 +73,16 @@ function scan() {
   } catch (e) {
     setTimeout(scan, 300);
   }
+}
+
+function reset(){
+  granted.hidden = true;
+  denied.hidden = true;
+  btnScanQR.hidden = false;
+}
+
+function waitforme(milisec) {
+  return new Promise(resolve => {
+      setTimeout(() => { resolve('') }, milisec);
+  })
 }
