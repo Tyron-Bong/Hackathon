@@ -16,11 +16,22 @@
       <a id="btn-scan-qr">
         <img src="start.png">
         <a />
-        <img id="granted" src="access granted.png" class="center" hidden="true" onclick=reset()>
-        <img id="denied" src="access denied.png" class="center" hidden="true" onclick=reset()>
-        <img id="temp" src="scan temp.png" class="center" hidden="true">
+        <img id="granted" src="access granted.png" class="coveredImage" hidden="true" onclick=reset()>
+        <img id="denied" src="access denied.png" class="coveredImage" hidden="true" onclick=reset()>
+        <img id="highRisk" src="high risk.png" class="coveredImage" hidden="true" onclick=reset()>
+        <img id="lowRisk" src="low risk.png" class="coveredImage" hidden="true" onclick=reset()>
+        <img id="vaccinated" src="vaccinated.png" class="coveredImage" hidden="true" onclick=reset()>
+        <img id="unvaccinated" src="unvaccinated.png" class="coveredImage" hidden="true" onclick=reset()>
+        <img id="temp" src="scan temp.png" class="coveredImage" hidden="true">
         <img id="qr" src="scan qr.png" class="coveredImage" hidden="true">
         <canvas hidden="" id="qr-canvas" class="coveringCanvas"></canvas>
+        <div id="name" class="name" hidden = "true">insert name</div>
+        <form id='form'class="center" hidden="true" action="#" onsubmit="runChecks();return false" >
+          <label for="inputTemp">Manual Temp Input:</label>
+          <input type="number" id="inputTemp" name="inputTemp" value=""><br><br>
+          <input type="submit" value="Submit">
+        </form>
+        <div id="tempData" class="temp" hidden = "true">insert temp</div>
         <div id="qr-result" hidden="">
           <span id="outputData"></span>
         </div>

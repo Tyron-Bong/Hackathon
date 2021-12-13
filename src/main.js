@@ -11,12 +11,23 @@ const temp = document.getElementById("temp");
 const qr = document.getElementById("qr");
 const granted = document.getElementById("granted");
 const denied = document.getElementById("denied");
+const highRisk = document.getElementById("highRisk");
+const lowRisk = document.getElementById("lowRisk");
+const vaccinated = document.getElementById("vaccinated");
+const unvaccinated = document.getElementById("unvaccinated");
+const nameQr = document.getElementById("name");
+const tempData = document.getElementById("tempData");
+const form = document.getElementById("form");
+
+var result = '';
+var x = '';
 
 let scanning = false;
 
 qrCode.callback = async (res) => {
   if (res) {
-    outputData.innerText = res;
+    result = JSON.parse(res);
+    outputData.innerText = result;
     scanning = false;
 
     video.srcObject.getTracks().forEach(track => {
@@ -28,19 +39,49 @@ qrCode.callback = async (res) => {
     btnScanQR.hidden = true;
     if (outputData.innerText != undefined) {
       temp.hidden = false;
+      form.hidden = false;
       qr.hidden = true;
-      var qrData = res;
     }
-    await waitforme(3000);
-    temp.hidden = true;
-    if (qrData == "true"){
-      granted.hidden = false;
-    }else {
-      denied.hidden = false;
-    }
-    
+
   }
 };
+
+async function runChecks() {
+  const inputTemp = parseFloat(document.getElementById("inputTemp").value);
+  temp.hidden = true;
+  form.hidden = true;
+
+
+  if (result.risk == "low" && result.vacc == "true") {
+    if (inputTemp < 37.0) {
+      granted.hidden = false;
+    } else {
+      denied.hidden = false;
+    }
+    vaccinated.hidden = false;
+    lowRisk.hidden = false;
+  } else {
+    denied.hidden = false;
+    if (result.risk == "high") {
+      highRisk.hidden = false;
+    } else {
+      lowRisk.hidden = false;
+    }
+    if (result.vacc == "false") {
+      unvaccinated.hidden = false;
+    } else {
+      vaccinated.hidden = false;
+    }
+  }
+  nameQr.innerText = result.name;
+  tempData.innerText = inputTemp + "°C";
+
+  nameQr.hidden = false;
+  tempData.hidden = false;
+  console.log(inputTemp)
+}
+
+
 
 btnScanQR.onclick = () => {
   qr.hidden = false
@@ -75,14 +116,13 @@ function scan() {
   }
 }
 
-function reset(){
-  granted.hidden = true;
-  denied.hidden = true;
-  btnScanQR.hidden = false;
+function reset() {
+  location.reload();
 }
+
 
 function waitforme(milisec) {
   return new Promise(resolve => {
-      setTimeout(() => { resolve('') }, milisec);
+    setTimeout(() => { resolve('') }, milisec);
   })
 }
