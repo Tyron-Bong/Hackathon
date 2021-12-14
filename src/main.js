@@ -81,7 +81,13 @@ async function runChecks() {
   console.log(inputTemp)
 }
 
+function incrementStats(){
+  
+}
 
+function saveData(data) {
+  fs.writeFileSync('statistics.txt', JSON.stringify(data));
+}
 
 btnScanQR.onclick = () => {
   qr.hidden = false
